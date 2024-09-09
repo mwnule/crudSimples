@@ -1,10 +1,30 @@
-const express = require('express')
-const app = express()
+const express = require("express");
+const mongoose = require("mongoose");
+const Product = require("./models/product.model.js");
+const productRoute = require("./routes/product.route.js");
+const app = express();
 
-app.listen(3000, () => {
-    console.log("Server está rodandoo na porta 3000")
-});
+// middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+//routes
+app.use("/api/products", productRoute);
 
 app.get("/", (req, res) => {
-    res.send("Hello ftom Node API Server")
+  res.send("Hello from Node API Server Updated");
 });
+
+mongoose
+  .connect(
+    "mongodb+srv://emanueledeoliveirasilveira:8HPYavUmvdSPQI00@backenddb.nldy4.mongodb.net/Node-API?retryWrites=true&w=majority&appName=BackendDB"
+  )
+  .then(() => {
+    console.log("Connected to database!");
+    app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
+  })
+  .catch(() => {
+    console.log("Conexão falhou!");
+  });
